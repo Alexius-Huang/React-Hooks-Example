@@ -14,6 +14,7 @@ ul.todo-list > li {
   padding: 0 10pt;
   transition: .25s;
   position: relative;
+  animation: fade-in .25s;
 }
 
 ul.todo-list > li.done {
@@ -73,4 +74,9 @@ ul.todo-list > li > span.btn-group > button.remove-btn {
 }
 ul.todo-list > li > span.btn-group > button.remove-btn:hover {
   border-bottom-color: var(--red-400);
+}
+
+@keyframes fade-in {
+  0%   { height: 0; opacity: 0; }
+  100% { height: 30pt; opacity: 1; }
 }

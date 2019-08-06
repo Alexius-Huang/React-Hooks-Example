@@ -1,15 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../css/TodoList.css';
+
+const initialList = [
+  { title: 'Planning Travel', done: false },
+  { title: 'Learn React Hooks', done: false },
+  { title: 'Go to Gym', done: true },
+  { title: 'Find Job', done: false },
+  { title: 'Watch Movie', done: true },
+];
 
 export default function TodoList() {
   const [newItem, setNewItem] = useState('');
-  const [list, setList] = useState([
-    { title: 'Planning Travel', done: false },
-    { title: 'Learn React Hooks', done: false },
-    { title: 'Go to Gym', done: true },
-    { title: 'Find Job', done: false },
-    { title: 'Watch Movie', done: true },
-  ]);
+  const [list, setList] = useState(initialList);
+
+  const [history, setHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  /* Everytime list is updated, new history appended */
+  useEffect(() => {
+    const newHistory = Array.from(history);
+    const newHistoryIndex = historyIndex + 1;
+    newHistory.push(list);
+
+    console.log(newHistoryIndex);
+    console.log(newHistory);
+
+    setHistory(newHistory);
+    setHistoryIndex(newHistoryIndex);
+  }, [list]);
+
+  /* Press Enter and append new item */
+  useEffect(() => {
+    const keydownEventHandler = function({ keyCode }) {
+      /* Enter key - Create new item */
+      if (keyCode === 13 && newItem !== '') {
+        const newList = Array.from(list);
+        newList.unshift({ title: newItem, done: false });
+        setList(newList);
+        setNewItem('');
+      }
+    };
+
+    document.addEventListener('keydown', keydownEventHandler);
+    return () => {
+      document.removeEventListener('keydown', keydownEventHandler);
+    };
+  });
 
   function handleToggleItem(title) {
     const index = list.findIndex(item => item.title === title);
