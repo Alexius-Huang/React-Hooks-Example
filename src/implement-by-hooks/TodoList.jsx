@@ -13,6 +13,7 @@ export default function TodoList() {
   const [newItem, setNewItem] = useState('');
   const [list, setList] = useState(initialList);
 
+  const [ctrlPressed, setCtrlPressed] = useState(false);
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
@@ -21,9 +22,6 @@ export default function TodoList() {
     const newHistory = Array.from(history);
     const newHistoryIndex = historyIndex + 1;
     newHistory.push(list);
-
-    console.log(newHistoryIndex);
-    console.log(newHistory);
 
     setHistory(newHistory);
     setHistoryIndex(newHistoryIndex);
@@ -44,6 +42,24 @@ export default function TodoList() {
     document.addEventListener('keydown', keydownEventHandler);
     return () => {
       document.removeEventListener('keydown', keydownEventHandler);
+    };
+  });
+
+  /* Detect Control key pressed */
+  useEffect(() => {
+    const keyupEventHandler = function({ keyCode }) {
+      if (keyCode === 17) setCtrlPressed(false);
+    };
+
+    const keydownEventHandler = function({ keyCode }) {
+      if (keyCode === 17) setCtrlPressed(true);
+    };
+
+    document.addEventListener('keydown', keydownEventHandler);
+    document.addEventListener('keyup', keyupEventHandler);
+    return () => {
+      document.removeEventListener('keydown', keydownEventHandler);
+      document.removeEventListener('keyup', keyupEventHandler);
     };
   });
 

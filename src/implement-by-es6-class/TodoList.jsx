@@ -15,6 +15,7 @@ export default class TodoList extends React.Component {
     this.state = {
       newItem: '',
       list: initialList,
+      ctrlPressed: false,
       history: [initialList],
       historyIndex: 0,
     };
@@ -22,14 +23,20 @@ export default class TodoList extends React.Component {
     this.handleToggleItem = this.handleToggleItem.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this);
     this.handleKeydownEvent = this.handleKeydownEvent.bind(this);
+    this.handleCtrlKeydown = this.handleCtrlKeydown.bind(this);
+    this.handleCtrlKeyup = this.handleCtrlKeyup.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleKeydownEvent);
+    document.addEventListener('keydown', this.handleCtrlKeydown);
+    document.addEventListener('keyup', this.handleCtrlKeyup);
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleKeydownEvent);
+    document.removeEventListener('keydown', this.handleCtrlKeydown);
+    document.removeEventListener('keyup', this.handleCtrlKeyup);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -44,9 +51,6 @@ export default class TodoList extends React.Component {
       const newHistory = Array.from(history);
       const newHistoryIndex = historyIndex + 1;
       newHistory.push(list);
-
-      console.log(newHistory);
-      console.log(newHistoryIndex);
 
       this.setState({
         history: newHistory,
@@ -68,6 +72,14 @@ export default class TodoList extends React.Component {
         newItem: '',
       });
     }
+  }
+
+  handleCtrlKeydown({ keyCode }) {
+    if (keyCode === 17) this.setState({ ctrlPressed: true });
+  }
+
+  handleCtrlKeyup({ keyCode }) {
+    if (keyCode === 17) this.setState({ ctrlPressed: false });
   }
 
   handleToggleItem(title) {
