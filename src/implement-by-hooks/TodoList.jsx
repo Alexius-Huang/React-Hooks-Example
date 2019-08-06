@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import useCtrlPressed from './hooks/useCtrlPressed';
 import useHistory from './hooks/useHistory';
+import useUndo from './hooks/useUndo';
+import useRedo from './hooks/useRedo';
 import '../css/TodoList.css';
 
 const initialList = [
@@ -37,33 +39,24 @@ export default function TodoList() {
   });
 
   /* Implement 'undo' and 'redo' mechanism */
-  useEffect(() => {
-    const keydownEventHandler = function({ keyCode }) {
-      if (ctrlPressed) {
-        /* Control + Z key - Undo */
-        if (keyCode === 90 && historyIndex > 0) {
-          const newHistoryIndex = historyIndex - 1;
-          const previousList = history[newHistoryIndex];
+  useUndo(ctrlPressed, () => {
+    if (historyIndex > 0) {
+      const newHistoryIndex = historyIndex - 1;
+      const previousList = history[newHistoryIndex];
 
-          setList(previousList);
-          setHistoryIndex(newHistoryIndex);
-        }
+      setList(previousList);
+      setHistoryIndex(newHistoryIndex);
+    }
+  });
 
-        /* Control + Y key - Redo */
-        if (keyCode === 89 && historyIndex + 1 < history.length) {
-          const newHistoryIndex = historyIndex + 1;
-          const nextList = history[newHistoryIndex];
+  useRedo(ctrlPressed, () => {
+    if (historyIndex + 1 < history.length) {
+      const newHistoryIndex = historyIndex + 1;
+      const nextList = history[newHistoryIndex];
 
-          setList(nextList);
-          setHistoryIndex(newHistoryIndex);
-        }
-      }
-    };
-
-    document.addEventListener('keydown', keydownEventHandler);
-    return () => {
-      document.removeEventListener('keydown', keydownEventHandler);
-    };
+      setList(nextList);
+      setHistoryIndex(newHistoryIndex);
+    }
   });
 
   function handleToggleItem(title) {
