@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useCtrlPressed from './hooks/useCtrlPressed';
 import '../css/TodoList.css';
 
 const initialList = [
@@ -13,7 +14,7 @@ export default function TodoList() {
   const [newItem, setNewItem] = useState('');
   const [list, setList] = useState(initialList);
 
-  const [ctrlPressed, setCtrlPressed] = useState(false);
+  const ctrlPressed = useCtrlPressed();
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
@@ -57,24 +58,6 @@ export default function TodoList() {
     document.addEventListener('keydown', keydownEventHandler);
     return () => {
       document.removeEventListener('keydown', keydownEventHandler);
-    };
-  });
-
-  /* Detect Control key pressed */
-  useEffect(() => {
-    const keyupEventHandler = function({ keyCode }) {
-      if (keyCode === 17) setCtrlPressed(false);
-    };
-
-    const keydownEventHandler = function({ keyCode }) {
-      if (keyCode === 17) setCtrlPressed(true);
-    };
-
-    document.addEventListener('keydown', keydownEventHandler);
-    document.addEventListener('keyup', keyupEventHandler);
-    return () => {
-      document.removeEventListener('keydown', keydownEventHandler);
-      document.removeEventListener('keyup', keyupEventHandler);
     };
   });
 
