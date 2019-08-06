@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useCtrlPressed from './hooks/useCtrlPressed';
+import useHistory from './hooks/useHistory';
 import '../css/TodoList.css';
 
 const initialList = [
@@ -15,33 +16,7 @@ export default function TodoList() {
   const [list, setList] = useState(initialList);
 
   const ctrlPressed = useCtrlPressed();
-  const [history, setHistory] = useState([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-
-  /* Everytime list is updated, new history appended */
-  useEffect(() => {
-    /*
-      Because undo and redo will change the current list state,
-      we need to prevent from modifying the history
-    */
-    if (ctrlPressed) return;
-
-    let newHistory = Array.from(history);
-    const newHistoryIndex = historyIndex + 1;
-
-    /*
-      If the history has been undone and new record appended,
-      then we need to clear out the future records and then
-      push the new one. 
-    */
-    if (history.length > historyIndex + 1) {
-      newHistory = newHistory.slice(0, newHistoryIndex);
-    }
-    newHistory.push(list);
-
-    setHistory(newHistory);
-    setHistoryIndex(newHistoryIndex);
-  }, [list]);
+  const [history, historyIndex, setHistory, setHistoryIndex] = useHistory(list, ctrlPressed);
 
   /* Press Enter and append new item */
   useEffect(() => {
