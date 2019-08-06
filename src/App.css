@@ -1,3 +1,26 @@
+body {
+  --yellow-500: #ffeb3b;
+  background-color: #333;
+  color: var(--yellow-500);
+}
+
+input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1pt solid var(--yellow-500);
+  padding: 0 5pt;
+  width: 300pt;
+  font-size: 14pt;
+  height: 30pt;
+  line-height: 30pt;
+  color: white;
+  text-align: left;
+}
+
+input:focus {
+  outline: none;
+}
+
 .App {
   text-align: center;
 }
