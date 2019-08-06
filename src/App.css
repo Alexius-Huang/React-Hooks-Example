@@ -1,5 +1,7 @@
 body {
   --yellow-500: #ffeb3b;
+  --red-400: #ef5350;
+  --green-600: #43a047;
   background-color: #333;
   color: var(--yellow-500);
 }

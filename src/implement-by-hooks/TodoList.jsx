@@ -1,43 +1,61 @@
 import React, { useState } from 'react';
+import '../css/TodoList.css';
 
 export default function TodoList() {
-  /*
-    useState hook:
-    Use a new state called 'title', it returns an array with 2 elements.
-    The first one is the state value which is immutable.
-    the second one is a function which sets the state 'title'.
+  const [newItem, setNewItem] = useState('');
+  const [list, setList] = useState([
+    { title: 'Planning Travel', done: false },
+    { title: 'Learn React Hooks', done: false },
+    { title: 'Go to Gym', done: true },
+    { title: 'Find Job', done: false },
+    { title: 'Watch Movie', done: true },
+  ]);
 
-    Lastly, the string 'Hello World' passed into the useState hook is the
-    initial value of the state 'title'.
-  */
-  const [title, setTitle] = useState('Hello World');
+  function handleToggleItem(title) {
+    const index = list.findIndex(item => item.title === title);
+    const newList = Array.from(list);
+    newList[index] = { title, done: !newList[index].done };
+    setList(newList);
+  }
 
-  /*
-    Originally, in ES6 class mode, every events need to use the `this`
-    keyword to bind the React component instance in order to use 
-    this.setState to update the state.
+  function handleRemoveItem(title) {
+    const index = list.findIndex(item => item.title === title);
+    const newList = Array.from(list);
+    newList.splice(index, 1);
+    setList(newList);
+  }
 
-    However, in functional component, everything is in the same scope
-    which we don't have to use the `this` keyword and simplifies a lot
-    of code.
-  */
-  const handleInputChange = function (event) {
-    const { value } = event.target;
-    setTitle(value);
-  };
-
-  /*
-    Because everything are in the functional scope, we don't need to use
-    the `this` keyword to reference our state and event handler.
-  */
   return (
     <div className="TodoList">
-      <h1>{title || 'TITLE'}</h1>
+      <h1>My Todo List</h1>
+
       <input
-        onChange={handleInputChange}
-        value={title}
-        placeholder="Input to change your title"
+        type="text"
+        placeholder="Create New Item"
+        value={newItem}
+        onChange={(event) => setNewItem(event.target.value)}
       />
+
+      <ul className="todo-list">
+        {
+          list.map(({ title, done }) => (
+            <li className={done ? 'done' : ''} key={title}>
+              <span className="content">{title}</span>
+
+              <span className="btn-group">
+                <button
+                  className="done-btn"
+                  onClick={() => handleToggleItem(title)}
+                >{done ? 'Undo' : 'Done'}</button>
+                <button
+                  className="remove-btn"
+                  onClick={() => handleRemoveItem(title)}
+                >Remove</button>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   );
 }

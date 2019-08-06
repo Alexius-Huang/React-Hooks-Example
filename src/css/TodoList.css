@@ -1,0 +1,76 @@
+ul.todo-list {
+  width: 300pt;
+  padding: 0;
+  margin: 0 auto;
+}
+
+ul.todo-list > li {
+  list-style-type: none;
+  height: 30pt;
+  line-height: 30pt;
+  background-color: #555;
+  color: var(--yellow-500);
+  text-align: left;
+  padding: 0 10pt;
+  transition: .25s;
+  position: relative;
+}
+
+ul.todo-list > li.done {
+  transition: .25s;
+  color: rgba(255, 255, 255, .25);
+  background-color: #444;
+}
+
+ul.todo-list > li + li {
+  margin-top: 3pt;
+}
+
+ul.todo-list > li > span.btn-group {
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  top: 0;
+  height: 30pt;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s;
+}
+
+ul.todo-list > li:hover > span.btn-group {
+  pointer-events: visible;
+  opacity: 1;
+  transition: .25s;
+}
+
+ul.todo-list > li > span.btn-group > button {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0 8pt;
+  height: 30pt;
+  line-height: 30pt;
+  font-size: 10pt;
+  vertical-align: top;
+  margin: 0;
+  border: none;
+  border-bottom: 2pt solid transparent;
+  border-radius: none;
+  color: var(--yellow-500);
+  transition: .25s;
+  background-color: transparent;
+}
+
+ul.todo-list > li > span.btn-group > button:hover {
+  border-bottom-color: var(--yellow-500);
+}
+
+ul.todo-list > li > span.btn-group > button:focus {
+  outline: none;
+}
+
+ul.todo-list > li > span.btn-group > button.remove-btn {
+  color: var(--red-400);
+}
+ul.todo-list > li > span.btn-group > button.remove-btn:hover {
+  border-bottom-color: var(--red-400);
+}
