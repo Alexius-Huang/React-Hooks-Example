@@ -3,6 +3,7 @@ import useCtrlPressed from './hooks/useCtrlPressed';
 import useHistory from './hooks/useHistory';
 import useUndo from './hooks/useUndo';
 import useRedo from './hooks/useRedo';
+import useEnter from './hooks/useEnter';
 import '../css/TodoList.css';
 
 const initialList = [
@@ -21,21 +22,13 @@ export default function TodoList() {
   const [history, historyIndex, setHistory, setHistoryIndex] = useHistory(list, ctrlPressed);
 
   /* Press Enter and append new item */
-  useEffect(() => {
-    const keydownEventHandler = function({ keyCode }) {
-      /* Enter key - Create new item */
-      if (keyCode === 13 && newItem !== '') {
-        const newList = Array.from(list);
-        newList.unshift({ title: newItem, done: false });
-        setList(newList);
-        setNewItem('');
-      }
-    };
-
-    document.addEventListener('keydown', keydownEventHandler);
-    return () => {
-      document.removeEventListener('keydown', keydownEventHandler);
-    };
+  useEnter(() => {
+    if (newItem !== '') {
+      const newList = Array.from(list);
+      newList.unshift({ title: newItem, done: false });
+      setList(newList);
+      setNewItem('');
+    }
   });
 
   /* Implement 'undo' and 'redo' mechanism */
