@@ -19,8 +19,23 @@ export default function TodoList() {
 
   /* Everytime list is updated, new history appended */
   useEffect(() => {
-    const newHistory = Array.from(history);
+    /*
+      Because undo and redo will change the current list state,
+      we need to prevent from modifying the history
+    */
+    if (ctrlPressed) return;
+
+    let newHistory = Array.from(history);
     const newHistoryIndex = historyIndex + 1;
+
+    /*
+      If the history has been undone and new record appended,
+      then we need to clear out the future records and then
+      push the new one. 
+    */
+    if (history.length > historyIndex + 1) {
+      newHistory = newHistory.slice(0, newHistoryIndex);
+    }
     newHistory.push(list);
 
     setHistory(newHistory);
@@ -60,6 +75,36 @@ export default function TodoList() {
     return () => {
       document.removeEventListener('keydown', keydownEventHandler);
       document.removeEventListener('keyup', keyupEventHandler);
+    };
+  });
+
+  /* Implement 'undo' and 'redo' mechanism */
+  useEffect(() => {
+    const keydownEventHandler = function({ keyCode }) {
+      if (ctrlPressed) {
+        /* Control + Z key - Undo */
+        if (keyCode === 90 && historyIndex > 0) {
+          const newHistoryIndex = historyIndex - 1;
+          const previousList = history[newHistoryIndex];
+
+          setList(previousList);
+          setHistoryIndex(newHistoryIndex);
+        }
+
+        /* Control + Y key - Redo */
+        if (keyCode === 89 && historyIndex + 1 < history.length) {
+          const newHistoryIndex = historyIndex + 1;
+          const nextList = history[newHistoryIndex];
+
+          setList(nextList);
+          setHistoryIndex(newHistoryIndex);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', keydownEventHandler);
+    return () => {
+      document.removeEventListener('keydown', keydownEventHandler);
     };
   });
 
